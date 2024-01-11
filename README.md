@@ -31,7 +31,7 @@ FlutterAI is a VS Code extension that allows you to generate Dart code snippets 
 
 **Generate Dart Code:** Quickly generate Dart code snippets based on natural language prompts.
 
-![feature X](./flutterai_richtext_tuts.gif)
+[![flutterai-richtext-tuts.gif](https://i.postimg.cc/xj38GPJN/flutterai-richtext-tuts.gif)](https://postimg.cc/YjjtMYxt)
 
 > Tip: More descriptive your prompts better is the code output. 
 Still it may not be accurate 100% all the time but it will improve with time.
