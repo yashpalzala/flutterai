@@ -1,0 +1,75 @@
+{
+  "name": "flutterai",
+  "displayName": "FlutterAI: Generate Dart snippets",
+  "description": "Light weight AI dart code generator for Flutter powered by Gemini",
+  "version": "0.0.2",
+  "publisher": "yashpalzala",
+  "type": "commonjs",
+  "icon": "media/flutterai_icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "repository": {
+    "url": "https://github.com/yashpalzala/flutterai"
+  },
+  "activationEvents": [
+    
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "flutterai.generateDartCode",
+        "title": "FlutterAI: Generate Flutter Snippet"
+      },
+      
+      {
+        "command": "flutterai.enterOnlyKey",
+        "title": "FlutterAI: Enter/Replace Api key"
+      }
+    ],
+    "configuration": {
+      "title": "FlutterAI Extension",
+      "properties": {
+        "flutterai.key": {
+          "type": "string",
+          "description": "API Key for Flutter AI",
+          "default": ""
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  },
+  
+  "keywords": [
+    "flutter",
+    "dart",
+    "gemini",
+    "bard",
+    "copilot",
+    "gpt",
+    "ai",
+    "assistant",
+    "chat",
+    "coding"
+  ]
+}
