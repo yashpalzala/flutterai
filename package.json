@@ -4,7 +4,6 @@
   "description": "Light weight AI dart code generator for Flutter powered by Gemini",
   "version": "0.0.2",
   "publisher": "yashpalzala",
-  "type": "commonjs",
   "icon": "media/flutterai_icon.png",
   "engines": {
     "vscode": "^1.85.0"
@@ -18,7 +17,7 @@
   "activationEvents": [
     
   ],
-  "main": "./extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
@@ -43,8 +42,11 @@
     }
   },
   "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
     "test": "vscode-test"
   },
   "devDependencies": {
