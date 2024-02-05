@@ -56,9 +56,11 @@ No settings are required as of now just follow Getting started steps and you are
 
 Initial version with minimal Code generation feature.
 
-### 1.0.0
+### What's new (v0.0.3)
 
-Initial release of FlutterAI snippets generator.
+Added support for storing previous prompts to directly access them next time you want to generate the code using 
+`FlutterAI: Generate Flutter Snippet` 
+command and also edit the previously used commands on the go.
 
 
 

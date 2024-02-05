@@ -1,12 +1,15 @@
 import * as vscode from 'vscode';
 import fetch from 'node-fetch';
 
+let userPastPromptInputs: string[];
+const maxStoredInputs = 5;
+
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context: vscode.ExtensionContext) {
     let disposableGenCode = vscode.commands.registerCommand("flutterai.generateDartCode", async () => {
-        await mainFunc(context);
+        await generateDartCode(context);
     });
     context.subscriptions.push(disposableGenCode);
 
@@ -17,12 +20,15 @@ function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(enterKeyCommand);
 }
 
-async function mainFunc(context: vscode.ExtensionContext) {
+async function generateDartCode(context: vscode.ExtensionContext) {
     // get and set the key first
     let apiKey = await getApiKey(context);
     if (!apiKey) {
         apiKey = await setApiKey(context);
     }
+
+    if(!userPastPromptInputs)
+    userPastPromptInputs = await getUserInputs();
 
     if (!apiKey) {
         return vscode.window.showErrorMessage('Terminated: API Key not found');
@@ -34,13 +40,31 @@ async function mainFunc(context: vscode.ExtensionContext) {
     // Get the current contents of the active text editor.
     const text = editor.document.getText();
     const textAppend = 'only code and corresponding comments only if necessary. Don\'t write language name in the beginning and remove semi-colon or any ending symbol if present from last as it is a code snippet';
-    const userInputPrompt = await vscode.window.showInputBox({
-        prompt: 'Write a container with rounded corners with radius 8 in flutter',
-        value: 'Write a code snippet in flutter ...', // Optional: default value in the input box
-    });
+    
+   // added showquickpick before input box for showing past input and let user select it if need be
+    let selectedPastInput: string| undefined;
+    if(userPastPromptInputs.length >0){
+        selectedPastInput = await vscode.window.showQuickPick([...userPastPromptInputs, 'Write a code snippet in flutter ...'], {
+            placeHolder: 'Select a previous input or write a new one by selecting last option(Write a code snippet in flutter ...)',
+        });
+        if(!selectedPastInput)return;
+    }
+
+    const userInputPrompt = await vscode.window.showInputBox(
+        selectedPastInput != null ? {
+        
+        value: selectedPastInput, 
+    }  : {
+            prompt: 'Write a container with rounded corners with radius 8 in flutter',
+            value: 'Write a code snippet in flutter ...', // Optional: default value in the input box
+        }
+        );
 
     // Prepare the API request body.
     if (!userInputPrompt) return;
+
+    // after all the check add user prompt into the array and storage as well
+    addToCacheAndStoreLocally(userInputPrompt);
     const body = {
         contents: [
             {
@@ -117,7 +141,7 @@ async function mainFunc(context: vscode.ExtensionContext) {
     // Insert the generated code snippet into the active text editor.
     if (editor && editor.selection && !isCancelled) {
         // Insert the generated code snippet into the active text editor.
-        console.log(dartCodeSnippet);
+        // console.log(dartCodeSnippet);
         editor.edit((editBuilder) => {
             editBuilder.insert(editor.selection.start, dartCodeSnippet);
         });
@@ -156,6 +180,27 @@ function toDartCodeSnippet(code: string) {
 
 // This method is called when your extension is deactivated
 function deactivate() {}
+
+const storedInputsKey = 'storedInputs';
+
+async function addToCacheAndStoreLocally(input: string){
+    userPastPromptInputs.unshift(input);
+
+if(userPastPromptInputs.length > maxStoredInputs){
+    userPastPromptInputs.pop();
+}
+storeUserInput(userPastPromptInputs);
+}
+
+async function storeUserInput(userInputPrompts: string[]) {
+    // Update the stored inputs in the configuration
+    vscode.workspace.getConfiguration().update(storedInputsKey, userInputPrompts, vscode.ConfigurationTarget.Global);
+}
+
+async function getUserInputs(): Promise<string[]> {
+    const storedInputs: string[] = vscode.workspace.getConfiguration().get(storedInputsKey, []);
+    return storedInputs;
+}
 
 export {
     activate,

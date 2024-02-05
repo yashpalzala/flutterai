@@ -2,7 +2,7 @@
   "name": "flutterai",
   "displayName": "FlutterAI: Generate Dart snippets",
   "description": "Light weight AI dart code generator for Flutter powered by Gemini",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "yashpalzala",
   "icon": "media/flutterai_icon.png",
   "engines": {
